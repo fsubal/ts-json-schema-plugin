@@ -3,9 +3,7 @@ import * as ts from "typescript/lib/tsserverlibrary";
 import { JSDocExtractor } from './src/JSDocExtractor'
 
 const factory: ts.server.PluginModuleFactory = () => ({
-  create({ project, languageService: parent }) {
-    const extractor = new JSDocExtractor(project)
-
+  create({ languageService: parent }) {
     return {
       ...parent,
 
@@ -22,13 +20,14 @@ const factory: ts.server.PluginModuleFactory = () => ({
           throw new Error("No source file: " + fileName);
         }
 
+        const extractor = new JSDocExtractor(source)
         const jsonSchemaDiagnostics = extractor.getDiagnostics()
 
         return [...jsonSchemaDiagnostics, ...diagnostics]
       },
 
       dispose() {
-        extractor.dispose()
+        // extractor.dispose()
       },
     };
   },
